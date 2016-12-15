@@ -3,8 +3,214 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Document</title>
+	<script src="js/jquery-1.2.3.js"></script>
+
+<style>
+.sence{
+	width:600px;
+	height:600px;
+	margin:0 auto;
+	border: 1px solid black;
+}
+.block{
+	width:28px;
+	height:28px;
+	border:1px solid #fff;
+	float: left;
+}
+ 
+.scale{
+	animation:fangdasuoxiao .6s ease;
+}
+@keyframes fangdasuoxiao{
+	0%,100%{
+		transform:scale(1,1);
+	}
+	80%{
+		transform:scale(1.2,1.2)
+	}
+}
+.word{
+	font-size: 20px;
+	color:#fff;
+	text-align: center;
+}
+
+.saolei{
+	width:601px;
+	height:602px;
+	margin:30px auto;
+	background: rgba(0,0,0,0.1);
+}
+.block{
+	width:26px;
+	height:26px;
+	border-top:2px solid #fff;
+	border-left:2px solid #fff;
+	border-right:2px solid #7c7c7c;
+	border-bottom:2px solid #7c7c7c;
+	float: left;
+	background: #4a84aa;
+	color:red;
+	text-align: center;
+	line-height: 26px;
+	font-size: 20px;
+}
+.red{
+	width: 26px;
+	height: 26px;
+	background-image: url(./imgs/1.png);
+	background-size:20px 20px;
+	background-repeat: no-repeat;
+	background-position-x: 4px;
+	background-position-y: 5px;
+}
+ 
+.scale{
+	-webkit-animation:fangdasuoxiao .6s ease;
+}
+@-webkit-keyframes fangdasuoxiao{
+	0%,100%{
+		transform:scale(1,1);
+	}
+	80%{
+		transform:scale(1.2,1.2)
+	}
+}
+.word{
+	font-size: 20px;
+	color:#fff;
+	text-align: center;
+}
+body{
+	background-image: url(./imgs/s.jpg);
+	background-repeat: no-repeat;
+	background-size: cover;
+	margin: 0;
+	padding: 0;
+}
+.bg{
+	background-image:url(./imgs/qz1.png);
+	background-size:cover;
+	background-position:center;
+	background-repeat:no-repeat;
+}
+#sy	{
+	margin-left: 780px;
+	margin-top: 50px;
+
+}
+#ndxz{
+	margin-top: 80px;
+	margin-left: 500px;
+}
+</style>
 </head>
 <body>
-	<h1>Hello Word !!!!</h1>
+	<div id='sy'><span style='color:red'>剩余的雷</span><input type="text" style='width:20px;'><span style='color:red'>颗</span></div>
+	<div class="saolei"></div>
 </body>
+<script>
+
+(function(){
+	var row = 20;
+	var n = 0;
+   var el='';
+   for (var i = 0; i <Math.pow(row+2,2); i++) {
+   	el +='<div></div>';
+   }
+   $('.saolei').html(el)
+   .find('div')
+   .addClass('block')
+    $('.saolei div:lt(23)').removeClass();
+    $('.saolei div:gt(461)').removeClass();
+    $('.saolei div:nth-child(22n+1)').removeClass();
+    $('.saolei div:nth-child(22n)').removeClass();
+ 
+   
+   $('.saolei div').each(function(i){
+   	$(this).data('index',i);
+   })
+   $('.saolei .block').each(function(i){
+   
+   	if(Math.random()>0.8){
+   		$(this).data('islei',true)
+   		n++
+   	}
+   }).mousedown(function(e){
+   	if(e.which == 1){
+   		if($(this).hasClass('bg')){
+   			return false;
+   		}
+   		if ($(this).data('islei')) {
+   		alert('炸死啦！！！');
+
+   		$('.saolei')
+   		.find('.block')
+   		/*.removeClass()
+   		.addClass('block')*/
+   		.addClass(function(){
+   			if ($(this).data('islei')) {
+   				return 'red scale';
+   			}
+   		}).css('animation-delay',function(){
+   			return Math.random()*0.8.toFixed(2)+'s';
+   		})
+
+   	}else{
+   		var shu=0;
+   		var pos=$(this).data('index');
+   		if($('.saolei div').eq(pos-1).data('islei')){shu++;};
+   		if($('.saolei div').eq(pos+1).data('islei')){shu++;};
+   		if($('.saolei div').eq(pos+(row+2)).data('islei')){shu++;};
+   		if($('.saolei div').eq(pos+(row+1)).data('islei')){shu++;};
+   		if($('.saolei div').eq(pos+(row+3)).data('islei')){shu++;};
+   		if($('.saolei div').eq(pos-(row+2)).data('islei')){shu++;};
+   		if($('.saolei div').eq(pos-(row+1)).data('islei')){shu++;};
+   		if($('.saolei div').eq(pos-(row+3)).data('islei')){shu++;};
+   		var g = 0;
+   		$('.word').each(function(i){
+   			g++;
+   		})
+   		if((400-n)==g){
+   			alert('你赢了！！！');
+   			reload();
+   		}else{
+			$(this).text(shu).addClass('word');
+   		}
+   		
+
+   	}
+   }else if(e.which == 3){
+   	   //$(this).css('background','url(./imgs/qz.jpg)')
+   	   if($(this).hasClass('word')){
+   	   		return false;
+   	   }
+   	   if($(this).hasClass('bg')){
+   	   		$(this).removeClass('bg')
+   	   		n++;
+   	   		$('input').val(n);
+   	   }else{
+   	   		$(this).addClass("bg")
+   	   		if(n>0){
+   	   			n--;
+   	   			$('input').val(n);
+   	   		}
+   	   		
+   	   }
+
+   	   // $(this).addClass("bg")
+   	  
+   }
+   	 
+   	document.oncontextmenu = function ()
+	{
+		return false
+	}
+
+   })
+$('input').val(n);
+ 
+})()
+</script>
 </html>
